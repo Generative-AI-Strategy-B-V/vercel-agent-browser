@@ -94,13 +94,13 @@ const COMMANDS = {
   // ─────────────────────────────────────────────────────────────────────────
   // STORAGE & COOKIES
   // ─────────────────────────────────────────────────────────────────────────
-  'storage-get':    { daemon: 'storageGet', params: ['type', 'key?'], help: 'Get localStorage/sessionStorage' },
-  'storage-set':    { daemon: 'storageSet', params: ['type', 'key', 'value'], help: 'Set storage value' },
-  'storage-remove': { daemon: 'storageRemove', params: ['type', 'key'], help: 'Remove storage key' },
-  'storage-clear':  { daemon: 'storageClear', params: ['type'], help: 'Clear storage (local/session)' },
-  'cookies-get':    { daemon: 'cookiesGet', params: [], help: 'Get all cookies' },
-  'cookies-set':    { daemon: 'cookiesSet', params: ['name', 'value', 'options?'], help: 'Set cookie' },
-  'cookies-clear':  { daemon: 'cookiesClear', params: [], help: 'Clear all cookies' },
+  'storage-get':    { daemon: 'storage_get', params: ['type', 'key?'], help: 'Get localStorage/sessionStorage' },
+  'storage-set':    { daemon: 'storage_set', params: ['type', 'key', 'value'], help: 'Set storage value' },
+  'storage-remove': { daemon: 'storage_remove', params: ['type', 'key'], help: 'Remove storage key' },
+  'storage-clear':  { daemon: 'storage_clear', params: ['type'], help: 'Clear storage (local/session)' },
+  'cookies-get':    { daemon: 'cookies_get', params: [], help: 'Get all cookies' },
+  'cookies-set':    { daemon: 'cookies_set', params: ['name', 'value', 'options?'], help: 'Set cookie' },
+  'cookies-clear':  { daemon: 'cookies_clear', params: [], help: 'Clear all cookies' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // NETWORK INTERCEPTION
