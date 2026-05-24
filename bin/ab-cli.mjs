@@ -38,7 +38,7 @@ const COMMANDS = {
   hover:        { daemon: 'hover', params: ['selector'], help: 'Hover over element' },
   drag:         { daemon: 'drag', params: ['source', 'target'], help: 'Drag source to target' },
   scroll:       { daemon: 'scroll', params: ['selector?', 'direction?'], help: 'Scroll page/element' },
-  scrollto:     { daemon: 'scrollto', params: ['selector'], help: 'Scroll element into view' },
+  scrollto:     { daemon: 'scrollintoview', params: ['selector'], help: 'Scroll element into view' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // KEYBOARD & TEXT INPUT
@@ -55,24 +55,24 @@ const COMMANDS = {
   // ─────────────────────────────────────────────────────────────────────────
   check:        { daemon: 'check', params: ['selector'], help: 'Check checkbox' },
   uncheck:      { daemon: 'uncheck', params: ['selector'], help: 'Uncheck checkbox' },
-  select:       { daemon: 'selectOption', params: ['selector', 'value'], help: 'Select dropdown option' },
-  upload:       { daemon: 'setInputFiles', params: ['selector', 'file'], help: 'Upload file to input' },
+  select:       { daemon: 'select', params: ['selector', 'values'], help: 'Select dropdown option' },
+  upload:       { daemon: 'upload', params: ['selector', 'files'], help: 'Upload file to input' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // ELEMENT INSPECTION
   // ─────────────────────────────────────────────────────────────────────────
   get:          { daemon: 'get', params: ['what', 'selector?'], help: 'Get property (text/attr/html)' },
-  gettext:      { daemon: 'textContent', params: ['selector'], help: 'Get element text content' },
-  getattr:      { daemon: 'getAttribute', params: ['selector', 'attribute'], help: 'Get attribute value' },
-  innerhtml:    { daemon: 'innerHTML', params: ['selector'], help: 'Get element inner HTML' },
+  gettext:      { daemon: 'gettext', params: ['selector'], help: 'Get element text content' },
+  getattr:      { daemon: 'getattribute', params: ['selector', 'attribute'], help: 'Get attribute value' },
+  innerhtml:    { daemon: 'innerhtml', params: ['selector'], help: 'Get element inner HTML' },
   outerhtml:    { daemon: 'outerHTML', params: ['selector'], help: 'Get element outer HTML' },
-  inputvalue:   { daemon: 'inputValue', params: ['selector'], help: 'Get input value' },
-  isvisible:    { daemon: 'isVisible', params: ['selector'], help: 'Check if element visible' },
-  isenabled:    { daemon: 'isEnabled', params: ['selector'], help: 'Check if element enabled' },
-  ischecked:    { daemon: 'isChecked', params: ['selector'], help: 'Check if checkbox checked' },
+  inputvalue:   { daemon: 'inputvalue', params: ['selector'], help: 'Get input value' },
+  isvisible:    { daemon: 'isvisible', params: ['selector'], help: 'Check if element visible' },
+  isenabled:    { daemon: 'isenabled', params: ['selector'], help: 'Check if element enabled' },
+  ischecked:    { daemon: 'ischecked', params: ['selector'], help: 'Check if checkbox checked' },
   ishidden:     { daemon: 'isHidden', params: ['selector'], help: 'Check if element hidden' },
   count:        { daemon: 'count', params: ['selector'], help: 'Count matching elements' },
-  boundingbox:  { daemon: 'boundingBox', params: ['selector'], help: 'Get element position/size' },
+  boundingbox:  { daemon: 'boundingbox', params: ['selector'], help: 'Get element position/size' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // SCREENSHOTS & SNAPSHOTS
@@ -108,15 +108,15 @@ const COMMANDS = {
   route:        { daemon: 'route', params: ['url', 'response?'], help: 'Mock network request' },
   unroute:      { daemon: 'unroute', params: ['url?'], help: 'Remove network mock' },
   offline:      { daemon: 'offline', params: ['enabled'], help: 'Toggle offline mode (true/false)' },
-  headers:      { daemon: 'setExtraHTTPHeaders', params: ['json'], help: 'Set extra HTTP headers' },
+  headers:      { daemon: 'headers', params: ['json'], help: 'Set extra HTTP headers' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // WAITING & SYNCHRONIZATION
   // ─────────────────────────────────────────────────────────────────────────
-  wait:         { daemon: 'waitForSelector', params: ['selector'], flags: ['--visible', '--hidden', '--attached', '--detached'], help: 'Wait for element' },
-  waiturl:      { daemon: 'waitForURL', params: ['url'], help: 'Wait for URL pattern' },
-  waitload:     { daemon: 'waitForLoadState', params: ['state?'], help: 'Wait for load state' },
-  waitfunction: { daemon: 'waitForFunction', params: ['script'], help: 'Wait for JS condition' },
+  wait:         { daemon: 'wait', params: ['selector?'], flags: ['--visible', '--hidden', '--attached', '--detached'], help: 'Wait for element' },
+  waiturl:      { daemon: 'waitforurl', params: ['url'], help: 'Wait for URL pattern' },
+  waitload:     { daemon: 'waitforloadstate', params: ['state?'], help: 'Wait for load state' },
+  waitfunction: { daemon: 'waitforfunction', params: ['expression'], help: 'Wait for JS condition' },
   waittimeout:  { daemon: 'waitForTimeout', params: ['ms'], help: 'Wait for milliseconds' },
   waitresponse: { daemon: 'waitForResponse', params: ['url'], help: 'Wait for network response' },
   waitrequest:  { daemon: 'waitForRequest', params: ['url'], help: 'Wait for network request' },
@@ -127,51 +127,51 @@ const COMMANDS = {
   frame:        { daemon: 'frame', params: ['selector'], help: 'Switch to iframe by selector' },
   frameurl:     { daemon: 'frameByUrl', params: ['url'], help: 'Switch to iframe by URL' },
   framename:    { daemon: 'frameByName', params: ['name'], help: 'Switch to iframe by name' },
-  mainframe:    { daemon: 'mainFrame', params: [], help: 'Switch back to main frame' },
+  mainframe:    { daemon: 'mainframe', params: [], help: 'Switch back to main frame' },
   frames:       { daemon: 'frames', params: [], help: 'List all frames' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // TABS & PAGES
   // ─────────────────────────────────────────────────────────────────────────
-  'tab-new':    { daemon: 'newPage', params: ['url?'], help: 'Open new tab' },
-  'tab-list':   { daemon: 'pages', params: [], help: 'List all tabs/pages' },
-  'tab-switch': { daemon: 'switchPage', params: ['index'], help: 'Switch to tab by index' },
-  'tab-close':  { daemon: 'closePage', params: ['index?'], help: 'Close tab by index' },
+  'tab-new':    { daemon: 'tab_new', params: ['url?'], help: 'Open new tab' },
+  'tab-list':   { daemon: 'tab_list', params: [], help: 'List all tabs/pages' },
+  'tab-switch': { daemon: 'tab_switch', params: ['index'], help: 'Switch to tab by index' },
+  'tab-close':  { daemon: 'tab_close', params: ['index?'], help: 'Close tab by index' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // RECORDING & TRACING
   // ─────────────────────────────────────────────────────────────────────────
-  'trace-start':  { daemon: 'traceStart', params: [], help: 'Start performance trace' },
-  'trace-stop':   { daemon: 'traceStop', params: ['path'], help: 'Stop trace and save to file' },
-  'har-start':    { daemon: 'harStart', params: [], help: 'Start HAR recording' },
-  'har-stop':     { daemon: 'harStop', params: ['path'], help: 'Stop HAR and save to file' },
-  'video-start':  { daemon: 'videoStart', params: [], help: 'Start video recording' },
-  'video-stop':   { daemon: 'videoStop', params: ['path'], help: 'Stop video and save to file' },
+  'trace-start':  { daemon: 'trace_start', params: [], help: 'Start performance trace' },
+  'trace-stop':   { daemon: 'trace_stop', params: ['path'], help: 'Stop trace and save to file' },
+  'har-start':    { daemon: 'har_start', params: [], help: 'Start HAR recording' },
+  'har-stop':     { daemon: 'har_stop', params: ['path'], help: 'Stop HAR and save to file' },
+  'video-start':  { daemon: 'video_start', params: ['path'], help: 'Start video recording' },
+  'video-stop':   { daemon: 'video_stop', params: [], help: 'Stop video and save to file' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // EMULATION & DEVICE
   // ─────────────────────────────────────────────────────────────────────────
-  viewport:     { daemon: 'setViewportSize', params: ['width', 'height'], help: 'Set viewport size' },
-  device:       { daemon: 'emulateDevice', params: ['name'], help: 'Emulate device (iPhone, Pixel, etc)' },
-  geolocation:  { daemon: 'setGeolocation', params: ['latitude', 'longitude'], help: 'Set geolocation' },
-  timezone:     { daemon: 'setTimezone', params: ['timezone'], help: 'Set timezone (e.g., America/New_York)' },
-  locale:       { daemon: 'setLocale', params: ['locale'], help: 'Set locale (e.g., en-US)' },
-  useragent:    { daemon: 'setUserAgent', params: ['ua'], help: 'Set user agent string' },
+  viewport:     { daemon: 'viewport', params: ['width', 'height'], help: 'Set viewport size' },
+  device:       { daemon: 'device', params: ['device'], help: 'Emulate device (iPhone, Pixel, etc)' },
+  geolocation:  { daemon: 'geolocation', params: ['latitude', 'longitude'], help: 'Set geolocation' },
+  timezone:     { daemon: 'timezone', params: ['timezone'], help: 'Set timezone (e.g., America/New_York)' },
+  locale:       { daemon: 'locale', params: ['locale'], help: 'Set locale (e.g., en-US)' },
+  useragent:    { daemon: 'useragent', params: ['userAgent'], help: 'Set user agent string' },
   colorsscheme: { daemon: 'setColorScheme', params: ['scheme'], help: 'Set color scheme (light/dark)' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // DIALOGS & ALERTS
   // ─────────────────────────────────────────────────────────────────────────
-  dialog:       { daemon: 'dialog', params: ['action', 'text?'], help: 'Handle dialog (accept/dismiss)' },
+  dialog:       { daemon: 'dialog', params: ['response', 'promptText?'], help: 'Handle dialog (accept/dismiss)' },
   'dialog-accept': { daemon: 'dialogAccept', params: ['text?'], help: 'Accept dialog with optional text' },
   'dialog-dismiss': { daemon: 'dialogDismiss', params: [], help: 'Dismiss dialog' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // AUTHENTICATION & PERMISSIONS
   // ─────────────────────────────────────────────────────────────────────────
-  'auth-basic': { daemon: 'setHTTPCredentials', params: ['username', 'password'], help: 'Set HTTP basic auth' },
-  'permission': { daemon: 'grantPermissions', params: ['permission'], help: 'Grant browser permission' },
-  'permission-clear': { daemon: 'clearPermissions', params: [], help: 'Clear all permissions' },
+  'auth-basic': { daemon: 'credentials', params: ['username', 'password'], help: 'Set HTTP basic auth' },
+  'permission': { daemon: 'permissions', params: ['permission'], help: 'Grant browser permission' },
+  'permission-clear': { daemon: 'permissions', params: [], help: 'Clear all permissions' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // FILE DOWNLOAD
@@ -195,14 +195,14 @@ const COMMANDS = {
   // ─────────────────────────────────────────────────────────────────────────
   // SESSION STORAGE
   // ─────────────────────────────────────────────────────────────────────────
-  'state-save':    { daemon: 'storageState', params: ['path'], help: 'Save browser state to file' },
-  'state-load':    { daemon: 'loadStorageState', params: ['path'], help: 'Load browser state from file' },
+  'state-save':    { daemon: 'state_save', params: ['path'], help: 'Save browser state to file' },
+  'state-load':    { daemon: 'state_load', params: ['path'], help: 'Load browser state from file' },
 
   // ─────────────────────────────────────────────────────────────────────────
   // UTILITY
   // ─────────────────────────────────────────────────────────────────────────
-  expose:       { daemon: 'exposeFunction', params: ['name', 'script'], help: 'Expose function to page' },
-  addscript:    { daemon: 'addInitScript', params: ['script'], help: 'Add script to run on navigation' },
+  expose:       { daemon: 'expose', params: ['name'], help: 'Expose function to page' },
+  addscript:    { daemon: 'addscript', params: ['content'], help: 'Add script to run on navigation' },
   highlight:    { daemon: 'highlight', params: ['selector'], help: 'Highlight element on page' },
 };
 
@@ -226,20 +226,21 @@ const FORMATTERS = {
   },
 
   // Storage outputs
-  storageGet: (data) => JSON.stringify(data, null, 2),
-  cookiesGet: (data) => {
+  storage_get: (data) => JSON.stringify(data, null, 2),
+  cookies_get: (data) => {
     if (!data?.cookies?.length) return 'No cookies';
     return data.cookies.map(c => `${c.name}=${c.value}`).join('\n');
   },
 
   // Element inspection
-  textContent: (data) => data?.text ?? data,
-  isVisible: (data) => data?.visible ?? data ? 'visible' : 'not visible',
-  isEnabled: (data) => data?.enabled ?? data ? 'enabled' : 'disabled',
-  isChecked: (data) => data?.checked ?? data ? 'checked' : 'unchecked',
-  isHidden: (data) => data?.hidden ?? data ? 'hidden' : 'visible',
+  gettext: (data) => data?.text ?? data,
+  getattribute: (data) => data?.value ?? data,
+  isvisible: (data) => (data?.visible ?? data) ? 'visible' : 'not visible',
+  isenabled: (data) => (data?.enabled ?? data) ? 'enabled' : 'disabled',
+  ischecked: (data) => (data?.checked ?? data) ? 'checked' : 'unchecked',
+  ishidden: (data) => (data?.hidden ?? data) ? 'hidden' : 'visible',
   count: (data) => `${data?.count ?? data} element(s)`,
-  boundingBox: (data) => data ? `x:${data.x} y:${data.y} w:${data.width} h:${data.height}` : 'Element not found',
+  boundingbox: (data) => data ? `x:${data.x} y:${data.y} w:${data.width} h:${data.height}` : 'Element not found',
 
   // Navigation
   navigate: (data) => `\x1b[32m✓\x1b[0m Navigated to: ${data?.url || data}`,
@@ -268,7 +269,7 @@ const FORMATTERS = {
   },
 
   // Tabs
-  pages: (data) => {
+  tab_list: (data) => {
     if (!data?.pages?.length) return 'No pages open';
     return data.pages.map((p, i) => `[${i}] ${p.title || '(untitled)'} - ${p.url}`).join('\n');
   },
@@ -287,10 +288,10 @@ const FORMATTERS = {
   launch: () => '\x1b[32m✓\x1b[0m Browser launched',
 
   // Waiting
-  waitForSelector: () => '\x1b[32m✓\x1b[0m Element found',
-  waitForURL: () => '\x1b[32m✓\x1b[0m URL matched',
-  waitForLoadState: () => '\x1b[32m✓\x1b[0m Load state reached',
-  waitForTimeout: () => '\x1b[32m✓\x1b[0m Wait completed',
+  wait: () => '\x1b[32m✓\x1b[0m Element found',
+  waitforurl: () => '\x1b[32m✓\x1b[0m URL matched',
+  waitforloadstate: () => '\x1b[32m✓\x1b[0m Load state reached',
+  waitfortimeout: () => '\x1b[32m✓\x1b[0m Wait completed',
 
   // Default
   default: (data) => {
@@ -339,7 +340,7 @@ const CATEGORIES = {
 function generateHelp(verbose = false) {
   let help = '\x1b[36mab-cli\x1b[0m - Browser automation for Claude Code\n';
   help += 'Usage: ab <command> [args] [--flags]\n\n';
-  help += 'Global flags: --headed (visible browser), --json (JSON output)\n\n';
+  help += 'Global flags: --headed (visible browser), --json (JSON output), --profile <dir>, --session <name>, --session-name <name>\n\n';
 
   if (verbose) {
     for (const [category, cmds] of Object.entries(CATEGORIES)) {
@@ -375,6 +376,8 @@ function generateHelp(verbose = false) {
   help += '  ab console                           # View console logs\n';
   help += '  ab errors                            # View JS errors\n';
   help += '  ab eval "document.title"\n';
+  help += '  ab open https://app.example.com --profile ~/.agent-browser/myapp\n';
+  help += '  ab open https://app.example.com --session-name myapp-auth\n';
   help += '  ab screenshot ./test.png --full\n';
   help += '  ab close\n';
 
@@ -400,7 +403,6 @@ function findDaemonPath() {
 }
 
 const daemonPath = findDaemonPath();
-const session = process.env.AGENT_BROWSER_SESSION || 'default';
 
 function getPortForSession(sess) {
   let hash = 0;
@@ -411,24 +413,75 @@ function getPortForSession(sess) {
   return 49152 + (Math.abs(hash) % 16383);
 }
 
-function getPidFile() {
+function getPidFile(session) {
+  // Keep this in sync with upstream daemon.js getSocketDir()/getPidFile().
+  // New path: <socketDir>/<session>.pid (e.g. ~/.agent-browser/default.pid)
+  // Legacy path kept for backwards compatibility with older wrapper versions.
+  return path.join(getSocketDir(), `${session}.pid`);
+}
+
+function getLegacyPidFile(session) {
   return path.join(os.tmpdir(), `agent-browser-${session}.pid`);
 }
 
-function isDaemonRunning() {
-  const pidFile = getPidFile();
-  if (!fs.existsSync(pidFile)) return false;
-  try {
-    const pid = parseInt(fs.readFileSync(pidFile, 'utf8').trim(), 10);
-    process.kill(pid, 0);
-    return true;
-  } catch {
-    return false;
+function getSocketDir() {
+  if (process.env.AGENT_BROWSER_SOCKET_DIR) {
+    return process.env.AGENT_BROWSER_SOCKET_DIR;
   }
+  if (process.env.XDG_RUNTIME_DIR) {
+    return path.join(process.env.XDG_RUNTIME_DIR, 'agent-browser');
+  }
+  const homeDir = os.homedir();
+  if (homeDir) {
+    return path.join(homeDir, '.agent-browser');
+  }
+  return path.join(os.tmpdir(), 'agent-browser');
 }
 
-async function startDaemon() {
-  const env = { ...process.env, AGENT_BROWSER_DAEMON: '1' };
+function isDaemonRunning(session) {
+  const pidFiles = [getPidFile(session), getLegacyPidFile(session)];
+  for (const pidFile of pidFiles) {
+    if (!fs.existsSync(pidFile)) continue;
+    try {
+      const pid = parseInt(fs.readFileSync(pidFile, 'utf8').trim(), 10);
+      process.kill(pid, 0);
+      return true;
+    } catch {
+      // Continue checking other known pid-file locations.
+    }
+  }
+  return false;
+}
+
+function isPortOpen(port, timeoutMs = 250) {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ port, host: '127.0.0.1' });
+    let done = false;
+
+    const finish = (result) => {
+      if (done) return;
+      done = true;
+      socket.destroy();
+      resolve(result);
+    };
+
+    socket.setTimeout(timeoutMs);
+    socket.on('connect', () => finish(true));
+    socket.on('timeout', () => finish(false));
+    socket.on('error', () => finish(false));
+  });
+}
+
+async function startDaemon(session, envOverrides = {}) {
+  const port = getPortForSession(session);
+
+  // If a daemon is already listening for this session, reuse it.
+  if (await isPortOpen(port)) {
+    return true;
+  }
+
+  const env = { ...process.env, ...envOverrides, AGENT_BROWSER_DAEMON: '1' };
+  env.AGENT_BROWSER_SESSION = session;
 
   const child = spawn(process.execPath, [daemonPath], {
     detached: true,
@@ -439,10 +492,9 @@ async function startDaemon() {
   });
   child.unref();
 
-  const port = getPortForSession(session);
   for (let i = 0; i < 50; i++) {
     await new Promise(r => setTimeout(r, 100));
-    if (isDaemonRunning()) {
+    if (await isPortOpen(port)) {
       return true;
     }
   }
@@ -505,6 +557,79 @@ function sendCommand(cmd, port) {
   });
 }
 
+function isRetryableSocketError(err) {
+  const code = err?.code || '';
+  const msg = String(err?.message || '');
+  return (
+    code === 'ECONNREFUSED' ||
+    code === 'ECONNRESET' ||
+    code === 'EPIPE' ||
+    msg.includes('ECONNREFUSED') ||
+    msg.includes('ECONNRESET') ||
+    msg.includes('Timeout')
+  );
+}
+
+function hashString(input) {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    hash = (hash << 5) - hash + input.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
+
+function sanitizeSessionId(input) {
+  const sanitized = String(input || '')
+    .trim()
+    .replace(/[^a-zA-Z0-9._-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+  return sanitized || 'default';
+}
+
+function expandUserPath(input) {
+  if (!input) return input;
+  if (input === '~') return os.homedir();
+  if (input.startsWith('~/') || input.startsWith('~\\')) {
+    return path.join(os.homedir(), input.slice(2));
+  }
+  return input;
+}
+
+function resolveProfilePath(profile) {
+  if (!profile) return undefined;
+  return path.resolve(expandUserPath(profile));
+}
+
+function deriveRuntimeContext(parsed) {
+  const env = {};
+
+  if (parsed.profile && parsed.sessionName) {
+    throw new Error('--profile cannot be combined with --session-name (persistent profile already stores auth state)');
+  }
+
+  if (parsed.profile) {
+    env.AGENT_BROWSER_PROFILE = resolveProfilePath(parsed.profile);
+  }
+
+  if (parsed.sessionName) {
+    env.AGENT_BROWSER_SESSION_NAME = parsed.sessionName;
+  }
+
+  let session = parsed.session;
+  if (!session && parsed.profile) {
+    const normalizedProfile = resolveProfilePath(parsed.profile).replace(/\\/g, '/').toLowerCase();
+    session = `profile-${hashString(normalizedProfile)}`;
+  } else if (!session && parsed.sessionName) {
+    session = `persist-${sanitizeSessionId(parsed.sessionName)}`;
+  } else if (!session) {
+    session = process.env.AGENT_BROWSER_SESSION || 'default';
+  }
+
+  return { session: sanitizeSessionId(session), env };
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // ARGUMENT PARSING & COMMAND BUILDING
 // ═══════════════════════════════════════════════════════════════════════════
@@ -518,22 +643,141 @@ function parseArgs(args) {
   let headed = false;
   let json = false;
   let verbose = false;
+  let profile;
+  let session;
+  let sessionName;
 
-  for (const arg of rest) {
+  for (let i = 0; i < rest.length; i++) {
+    const arg = rest[i];
     if (arg === '--headed') headed = true;
     else if (arg === '--json') json = true;
     else if (arg === '-v' || arg === '--verbose') verbose = true;
+    else if (arg === '--profile') profile = rest[++i];
+    else if (arg === '--session') session = rest[++i];
+    else if (arg === '--session-name') sessionName = rest[++i];
     else if (arg.startsWith('-')) flags.push(arg);
     else positional.push(arg);
   }
 
-  return { action, args: positional, flags, headed, json, verbose };
+  return { action, args: positional, flags, headed, json, verbose, profile, session, sessionName };
 }
 
 function buildCommand(parsed) {
   const { action, args, flags, headed } = parsed;
   const id = `cmd-${Date.now()}`;
   const spec = COMMANDS[action];
+
+  if (action === 'get') {
+    const [what, selector, extra] = args;
+    switch (what) {
+      case 'text':
+        return { id, action: 'gettext', selector };
+      case 'attr':
+      case 'attribute':
+        return { id, action: 'getattribute', selector, attribute: extra };
+      case 'html':
+      case 'innerhtml':
+        return { id, action: 'innerhtml', selector };
+      case 'value':
+      case 'inputvalue':
+        return { id, action: 'inputvalue', selector };
+      case 'count':
+        return { id, action: 'count', selector };
+      case 'box':
+      case 'boundingbox':
+        return { id, action: 'boundingbox', selector };
+      case 'url':
+        return { id, action: 'url' };
+      case 'title':
+        return { id, action: 'title' };
+      default:
+        throw new Error(`Unsupported get target: ${what}. Use text, attr, html, value, count, box, url, or title.`);
+    }
+  }
+
+  if (action === 'dialog-accept') {
+    return { id, action: 'dialog', response: 'accept', ...(args[0] ? { promptText: args[0] } : {}) };
+  }
+
+  if (action === 'dialog-dismiss') {
+    return { id, action: 'dialog', response: 'dismiss' };
+  }
+
+  if (action === 'frameurl') {
+    return { id, action: 'frame', url: args[0] };
+  }
+
+  if (action === 'framename') {
+    return { id, action: 'frame', name: args[0] };
+  }
+
+  if (action === 'permission') {
+    return { id, action: 'permissions', permissions: [args[0]], grant: true };
+  }
+
+  if (action === 'permission-clear') {
+    return { id, action: 'permissions', permissions: [], grant: false };
+  }
+
+  if (action === 'cookies-set') {
+    const [name, value, optionsJson] = args;
+    const cookie = { name, value };
+    if (optionsJson) {
+      Object.assign(cookie, JSON.parse(optionsJson));
+    }
+    return { id, action: 'cookies_set', cookies: [cookie] };
+  }
+
+  if (action === 'headers') {
+    return { id, action: 'headers', headers: JSON.parse(args[0] || '{}') };
+  }
+
+  if (action === 'route') {
+    const [url, responseJson] = args;
+    const cmd = { id, action: 'route', url };
+    if (responseJson) cmd.response = JSON.parse(responseJson);
+    return cmd;
+  }
+
+  if (action === 'storage-remove') {
+    const [type, key] = args;
+    const storageType = type === 'session' ? 'sessionStorage' : 'localStorage';
+    return {
+      id,
+      action: 'evaluate',
+      script: `${storageType}.removeItem(${JSON.stringify(key)})`,
+    };
+  }
+
+  if (action === 'outerhtml') {
+    return {
+      id,
+      action: 'evaluate',
+      script: `(() => { const el = document.querySelector(${JSON.stringify(args[0])}); return el ? el.outerHTML : null; })()`,
+    };
+  }
+
+  if (action === 'ishidden') {
+    return {
+      id,
+      action: 'evaluate',
+      script: `(() => {
+        const el = document.querySelector(${JSON.stringify(args[0])});
+        if (!el) return true;
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return style.display === 'none' || style.visibility === 'hidden' || rect.width === 0 || rect.height === 0;
+      })()`,
+    };
+  }
+
+  if (action === 'blur') {
+    return {
+      id,
+      action: 'evaluate',
+      script: `(() => { const el = document.querySelector(${JSON.stringify(args[0])}); if (el) el.blur(); return !!el; })()`,
+    };
+  }
 
   if (!spec) {
     // Pass through unknown commands with generic args
@@ -551,8 +795,10 @@ function buildCommand(parsed) {
       if (['width', 'height', 'index', 'ms', 'latitude', 'longitude'].includes(paramName)) {
         const num = parseFloat(args[i]);
         cmd[paramName] = isNaN(num) ? args[i] : num;
-      } else if (['enabled'].includes(paramName)) {
+      } else if (['enabled', 'offline'].includes(paramName)) {
         cmd[paramName] = args[i] === 'true';
+      } else if (['files', 'values', 'permissions'].includes(paramName)) {
+        cmd[paramName] = args[i].includes(',') ? args[i].split(',').map(v => v.trim()).filter(Boolean) : args[i];
       } else {
         cmd[paramName] = args[i];
       }
@@ -589,12 +835,14 @@ async function main() {
     process.exit(0);
   }
 
+  const runtime = deriveRuntimeContext(parsed);
+  const session = runtime.session;
   const port = getPortForSession(session);
 
   // Start daemon if not running
-  if (!isDaemonRunning()) {
+  if (!(isDaemonRunning(session) && await isPortOpen(port))) {
     console.error('\x1b[36mStarting browser daemon...\x1b[0m');
-    const started = await startDaemon();
+    const started = await startDaemon(session, runtime.env);
     if (!started) {
       console.error('\x1b[31m✗\x1b[0m Daemon failed to start');
       process.exit(1);
@@ -614,10 +862,21 @@ async function main() {
   }
 
   const cmd = buildCommand(parsed);
-  const spec = COMMANDS[parsed.action];
-  const daemonAction = spec?.daemon || parsed.action;
+  const daemonAction = cmd.action;
 
-  const response = await sendCommand(cmd, port);
+  let response;
+  try {
+    response = await sendCommand(cmd, port);
+  } catch (err) {
+    if (!isRetryableSocketError(err)) {
+      throw err;
+    }
+    // One-shot recovery for transient daemon/socket races.
+    console.error('\x1b[33m!\x1b[0m Transient socket error, retrying once...');
+    await startDaemon(session, runtime.env);
+    await new Promise(r => setTimeout(r, 150));
+    response = await sendCommand(cmd, port);
+  }
 
   if (parsed.json) {
     console.log(JSON.stringify(response, null, 2));
